@@ -1,0 +1,25 @@
+# MATLAB 自动生成的临时文件
+*.asv
+*.mat
+*.m~
+*.mexw64
+*.mexw32
+
+# 数据文件（体积大，不进 git）
+*.rnx
+*.26o
+*.26n
+*.26g
+*.*.o
+*.*.n
+*.nav
+*.obs
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器临时文件
+.vscode/
+.idea/
+debug_spp*.m

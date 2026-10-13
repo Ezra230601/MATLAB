@@ -1,0 +1,54 @@
+function [date1, leapsec] = utc2gps(date0)
+
+stepdates = [...
+    'Jan 6 1980'
+    'Jul 1 1981'
+    'Jul 1 1982'
+    'Jul 1 1983'
+    'Jul 1 1985'
+    'Jan 1 1988'
+    'Jan 1 1990'
+    'Jan 1 1991'
+    'Jul 1 1992'
+    'Jul 1 1993'
+    'Jul 1 1994'
+    'Jan 1 1996'
+    'Jul 1 1997'
+    'Jan 1 1999'
+    'Jan 1 2006'
+    'Jan 1 2009'
+    'Jul 1 2012'
+    'Jul 1 2015'];
+
+%% Convert Steps to datenums and make step offsets
+stepdates = datenum(stepdates)'; %step date coversion
+steptime = (0:length(stepdates)-1)'./86400;  %corresponding step time (sec)
+
+%% Arg Checking
+if ~isnumeric(date0) %make sure date0 are datenums, if not try converting
+    date0 = datenum(date0); %will error if not a proper format
+end
+
+if ~isempty(find(date0 < stepdates(1)))%date0 must all be after GPS start date
+    error('Input dates must be after 00:00:00 on Jan 6th 1980') 
+end
+
+%% Array Sizing
+sz = size(date0);
+date0 = date0(:);
+
+date0 = repmat(date0,[1 size(stepdates,2)]);
+stepdates = repmat(stepdates,[size(date0,1) 1]);
+
+%% Conversion
+delta = steptime(sum((date0 - stepdates) >= 0,2));
+date1 = date0(:,1) + delta;
+
+%% Reshape Output Array
+date1 = reshape(date1,sz);
+
+%% Leap seconds
+leapsec = datevec(delta);
+leapsec = leapsec(:,end);
+
+
