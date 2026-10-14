@@ -9,14 +9,10 @@ if  n==0
 end
 
 icol = isat(1) ;
-delta =0 ;
 
-%consider BeiDou time (BDT) for BeiDou satellites
-if ( strcmp( char(Eph(31)) , 'C' ) )
-    delta =14;
-    time = time-delta ;
-end
-
+% 注：weektow2time 已经为北斗把 +14 秒加进 Eph(32)，
+%     所以 Eph(32) 对所有星座都是"GPS 连续秒"，
+%     这里直接和 time（GPS 连续秒）比较即可，不再做北斗 -14 调整。
 time_eph = Eph(32,icol);
 dtmin = time_eph - time ;
 
@@ -43,8 +39,8 @@ else
     end
 end
 
-if fix(abs(dtmin)) -delta > dtmax
-    icol = [ ]; 
+if fix(abs(dtmin)) > dtmax
+    icol = [ ];
     return ;
 end
 

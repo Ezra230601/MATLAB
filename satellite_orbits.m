@@ -32,11 +32,9 @@ switch char(Eph(31))
         Omegae_dot = glp.gps.OMEGAE_dot;
 end
 
-%consider BeiDou time (BDT) for BeiDou satellites
-if (strcmp(char(Eph(31)),'C'))
-    t = t - 14;
-end
-
+% 注：weektow2time 已为北斗把 +14 秒加进 Eph(32)，所有星座的 time_eph 都在
+%     "GPS 连续秒"框架下。tk = t - time_eph 中 14 秒会自动抵消，所以这里不再
+%     对 t 做 -14 调整，避免 tk 被偏置 14 秒。
 %GPS/Galileo/BeiDou/QZSS satellite coordinates computation
 if (~strcmp(char(Eph(31)),'R'))
     
